@@ -1,6 +1,8 @@
 #include "pci.h"
 #include "common.h"
 
+#include "drivers/rtl8139.h"
+
 // Read four bytes from PCI config space.
 u32 pci_config_readl(u32 bus, u32 slot, u32 func, u32 offset)
 {
@@ -30,7 +32,7 @@ u8 pci_config_readb(u32 bus, u32 slot, u32 func, u32 offset)
   return (u8) (ldata >> (8 * offset));
 }
 
-// A very inefficient PCI scan.
+// A very inefficient PCI enumeration routine.
 void pci_scan()
 {
   u16 bus, slot, func;
@@ -40,8 +42,30 @@ void pci_scan()
       {
         u16 vendorID = pci_config_readw(bus, slot, func, 0);
         u16 deviceID = pci_config_readw(bus, slot, func, 2);
-        u8 empty = deviceID == 0xffff && vendorID == 0xffff;
+        u8 empty = vendorID == 0xffff;
         if (!empty)
-          kprintf("Found vendor 0x%x's device 0x%x\n", vendorID, deviceID);
+        {
+          kprintf("Found vendor 0x%x's device: 0x%x\n", vendorID, deviceID);
+
+          int i;
+          for (i = 0; i < 6; ++i)
+          {
+            u32 bar = pci_config_readl(bus, slot, func, 16 + 4*i);
+            if (bar == 0)
+              continue;
+            u8 is_io = bar & 1;
+            if (is_io)
+            {
+              kprintf("    IO BAR: 0x%x\n", bar >> 2 << 2);
+            }
+            else
+              kprintf("    Memory BAR: 0x%x\n", bar >> 4 << 4);
+          }
+
+          if (vendorID == 0x10ec && deviceID == 0x8139)
+          {
+            init_rtl8139(bus, slot, func);
+          }
+        }
       }
 }

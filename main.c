@@ -15,12 +15,11 @@ void kmain(multiboot_info_t *mbi, unsigned int magic)
     panic("bits 4 and 5 were both set");
 
   cls();
-
-  if (CHECK_FLAG(mbi->flags, 2))
-    kprintf("command = %s\n", (char *) mbi->cmdline);
+  kputs("Sup world?");
 
   if (CHECK_FLAG(mbi->flags, 6))
   {
+    kputs("exploring memory map");
     memory_map_t *mmap;
     for (mmap = (memory_map_t *) mbi->mmap_addr;
          (unsigned long) mmap < mbi->mmap_addr + mbi->mmap_length;
@@ -35,6 +34,7 @@ void kmain(multiboot_info_t *mbi, unsigned int magic)
         addr = (char *) addr + 4;
         len -= 4;
       }
+      kprintf("    0x%x: 0x%x bytes\n", addr, len);
       raw_free(addr, len);
     }
   }

@@ -1,4 +1,5 @@
-OBJECTS=loader.o main.o console.o panic.o memory.o itoa.o random.o dtables.o flushtables.o io.o interrupt.o isr.o pci.o handlers.o
+OBJECTS=loader.o main.o console.o panic.o memory.o itoa.o random.o dtables.o flushtables.o io.o interrupt.o isr.o pci.o handlers.o \
+        drivers/rtl8139.o
 
 CC=gcc
 CFLAGS=-Wall -Wextra -nostdlib -fno-builtin -nostartfiles -nodefaultlibs
