@@ -1,23 +1,33 @@
 #include "pci.h"
 #include "common.h"
 
-// Read a word PCI configuration space.
-u16 pci_config_readw(u32 bus, u32 slot, u32 func, u32 offset)
+// Read four bytes from PCI config space.
+u32 pci_config_readl(u32 bus, u32 slot, u32 func, u32 offset)
 {
-  u32 address;
-//   u32 lbus = (u32) bus;
-//   u32 lslot = (u32) slot;
-//   u32 lfunc = (u32) func;
+  ASSERT((offset & 3) == 0, "pci read not aligned");
 
   // create configuration address
-  address = (u32) ((bus << 16) | (slot << 11) | (func << 8) | (offset & 0xfc) | ((u32) 0x80000000));
+  u32 address = (bus << 16) | (slot << 11) | (func << 8) | offset | (u32) 0x80000000;
 
   // write out the address
   outl(0xCF8, address);
 
   // read in the data
-  // (offset & 2) * 8) = 0 will choose the fisrt word of the 32 bits register
-  return (u16) ((inl(0xCFC) >> ((offset & 2) * 8)) & 0xffff);
+  return inl(0xCFC);
+}
+
+// Read two byes from PCI config space.
+u16 pci_config_readw(u32 bus, u32 slot, u32 func, u32 offset)
+{
+  u32 ldata = pci_config_readl(bus, slot, func, offset & 0xfc);
+  return (u16) (ldata >> (8 * offset));
+}
+
+// Read a byte from PCI config space.
+u8 pci_config_readb(u32 bus, u32 slot, u32 func, u32 offset)
+{
+  u32 ldata = pci_config_readl(bus, slot, func, offset & 0xfc);
+  return (u8) (ldata >> (8 * offset));
 }
 
 // A very inefficient PCI scan.
@@ -32,6 +42,6 @@ void pci_scan()
         u16 deviceID = pci_config_readw(bus, slot, func, 2);
         u8 empty = deviceID == 0xffff && vendorID == 0xffff;
         if (!empty)
-          kprintf("Found vendor %d's device %d\n", vendorID, deviceID);
+          kprintf("Found vendor 0x%x's device 0x%x\n", vendorID, deviceID);
       }
 }
