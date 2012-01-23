@@ -2,15 +2,15 @@
 #include "common.h"
 
 // Read a word PCI configuration space.
-u16 pci_config_readw(unsigned short bus, unsigned short slot, unsigned short func, unsigned short offset)
+u16 pci_config_readw(u32 bus, u32 slot, u32 func, u32 offset)
 {
   u32 address;
-  u32 lbus = (unsigned long) bus;
-  u32 lslot = (unsigned long) slot;
-  u32 lfunc = (unsigned long) func;
+//   u32 lbus = (u32) bus;
+//   u32 lslot = (u32) slot;
+//   u32 lfunc = (u32) func;
 
   // create configuration address
-  address = (u32) ((lbus << 16) | (lslot << 11) | (lfunc << 8) | (offset & 0xfc) | ((u32) 0x80000000));
+  address = (u32) ((bus << 16) | (slot << 11) | (func << 8) | (offset & 0xfc) | ((u32) 0x80000000));
 
   // write out the address
   outl(0xCF8, address);
@@ -28,10 +28,10 @@ void pci_scan()
     for (slot = 0; slot < 32; ++slot)
       for (func = 0; func < 8; ++func)
       {
-        u16 deviceID = pci_config_readw(bus, slot, func, 0);
-        u16 vendorID = pci_config_readw(bus, slot, func, 2);
+        u16 vendorID = pci_config_readw(bus, slot, func, 0);
+        u16 deviceID = pci_config_readw(bus, slot, func, 2);
         u8 empty = deviceID == 0xffff && vendorID == 0xffff;
         if (!empty)
-          kprintf("Found device %d from vendor %d\n", deviceID, vendorID);
+          kprintf("Found vendor %d's device %d\n", vendorID, deviceID);
       }
 }

@@ -1,7 +1,7 @@
-OBJECTS=loader.o main.o console.o panic.o memory.o itoa.o random.o dtables.o flushtables.o io.o interrupt.o isr.o pci.o
+OBJECTS=loader.o main.o console.o panic.o memory.o itoa.o random.o dtables.o flushtables.o io.o interrupt.o isr.o pci.o handlers.o
 
 CC=gcc
-CFLAGS=-Wall -Wextra -Werror -nostdlib -fno-builtin -nostartfiles -nodefaultlibs
+CFLAGS=-Wall -Wextra -nostdlib -fno-builtin -nostartfiles -nodefaultlibs
 
 demo: kernel.bin
 	qemu-system-i386 -m 512 -kernel kernel.bin
