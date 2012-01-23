@@ -17,9 +17,12 @@ typedef signed int s32;
 typedef signed long long s64;
 typedef __SIZE_TYPE__ size_t;
 
-void outb(u16 port, u8 value);
-u8 inb(u16 port);
+void outb(u16 port, u8  value);
+void outw(u16 port, u16 value);
+void outl(u16 port, u32 value);
+u8  inb(u16 port);
 u16 inw(u16 port);
+u32 inl(u16 port);
 
 void *raw_malloc(size_t len);
 void raw_free(void *start, size_t len);

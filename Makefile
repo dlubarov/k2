@@ -1,4 +1,4 @@
-OBJECTS=loader.o main.o console.o panic.o memory.o itoa.o random.o dtables.o flushtables.o io.o interrupt.o isr.o
+OBJECTS=loader.o main.o console.o panic.o memory.o itoa.o random.o dtables.o flushtables.o io.o interrupt.o isr.o pci.o
 
 CC=gcc
 CFLAGS=-Wall -Wextra -Werror -nostdlib -fno-builtin -nostartfiles -nodefaultlibs

@@ -1,5 +1,7 @@
 #include "common.h"
 #include "multiboot.h"
+#include "dtables.h"
+#include "pci.h"
 
 #define CHECK_FLAG(flags,bit) ((flags) & (1 << (bit)))
 
@@ -37,4 +39,12 @@ void kmain(multiboot_info_t *mbi, unsigned int magic)
   }
   else
     panic("no memory map was provided");
+
+  init_descriptor_tables();
+
+  pci_scan();
+
+  kputs("Goodbye");
+
+  for (;;) ;
 }
