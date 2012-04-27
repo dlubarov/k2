@@ -1,4 +1,4 @@
-OBJECTS=loader.o main.o console.o panic.o memory.o itoa.o random.o dtables.o flushtables.o io.o interrupt.o isr.o pci.o handlers.o \
+OBJECTS=loader.o main.o common.o console.o panic.o memory.o itoa.o random.o dtables.o flushtables.o io.o interrupt.o isr.o pci.o handlers.o \
         drivers/rtl8139.o
 
 CC=gcc
@@ -16,4 +16,4 @@ kernel.bin: $(OBJECTS) link.ld
 .PHONY: clean
 
 clean:
-	rm -f *.o kernel.bin
+	rm -f *.o **/*.o kernel.bin

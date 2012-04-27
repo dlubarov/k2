@@ -12,10 +12,10 @@ u32 pci_config_readl(u32 bus, u32 slot, u32 func, u32 offset)
   u32 address = (bus << 16) | (slot << 11) | (func << 8) | offset | (u32) 0x80000000;
 
   // write out the address
-  outl(0xCF8, address);
+  iowrite32(0xCF8, address);
 
   // read in the data
-  return inl(0xCFC);
+  return ioread32(0xCFC);
 }
 
 // Read two byes from PCI config space.

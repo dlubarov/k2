@@ -7,7 +7,7 @@
   isr%1:
     cli                         ; Disable interrupts firstly.
     push byte 0                 ; Push a dummy error code.
-    push  %1                    ; Push the interrupt number.
+    push %1                     ; Push the interrupt number.
     jmp isr_common_stub         ; Go to our common handler code.
 %endmacro
 
@@ -142,3 +142,13 @@ irq_common_stub:
     add esp, 8     ; Cleans up the pushed error code and pushed ISR number
     sti
     iret           ; pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP
+
+; For switching to virtual 8086 mode
+global isr_v8086
+isr_v8086:
+    cli
+    pusha
+    ; or EFLAGS w/ 0x20000
+    popa
+    sti
+    iret

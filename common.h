@@ -17,12 +17,12 @@ typedef signed int s32;
 typedef signed long long s64;
 typedef __SIZE_TYPE__ size_t;
 
-void outb(u16 port, u8  value);
-void outw(u16 port, u16 value);
-void outl(u16 port, u32 value);
-u8  inb(u16 port);
-u16 inw(u16 port);
-u32 inl(u16 port);
+void iowrite8(u16 port, u8  value);
+void iowrite16(u16 port, u16 value);
+void iowrite32(u16 port, u32 value);
+u8  ioread8(u16 port);
+u16 ioread16(u16 port);
+u32 ioread32(u16 port);
 
 void *raw_malloc(size_t len);
 void raw_free(void *start, size_t len);
@@ -47,3 +47,6 @@ u32 randu32_limit(u32 upper);
 u32 randu32_range(u32 lower, u32 upper);
 
 void panic(const char *message);
+
+void cli();
+void sti();
